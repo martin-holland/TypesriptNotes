@@ -2,6 +2,7 @@
 
 Very good Article:
 https://blog.logrocket.com/types-vs-interfaces-in-typescript/
+Good Tutorials:
 
 ## Enums
 
@@ -140,4 +141,224 @@ let anotherFamily: Family<Dog> = {
     { name: "Puppenator", tailWagSpeed: 0.01 },
   ],
 };
+```
+
+### Generic Typed Functions
+
+```typescript
+function getFilledArray<T>(value: T, n: number): T[] {
+  return Array(n).fill(value);
+}
+
+let stringArray: string[];
+let numberArray: number[];
+let personArray: { name: string; age: number }[];
+let coordinateArray: [number, number][];
+
+// Write your code below:
+stringArray = getFilledArray<string>("hi", 6);
+numberArray = getFilledArray<number>(9, 6);
+personArray = getFilledArray<{ name: string; age: number }>(
+  { name: "J. Dean", age: 24 },
+  6
+);
+coordinateArray = getFilledArray<[number, number]>([3, 4], 6);
+```
+
+### Union Types
+
+```typescript
+let ID: string | number;
+
+// number
+ID = 1;
+
+// or string
+ID = "001";
+
+console.log(`The ID is ${ID}.`);
+```
+
+#### Union Types in functions
+
+```typescript
+function getMarginLeft(margin: string | number) {
+  // margin may be a string or number here
+
+  if (typeof margin === "string") {
+    // margin must be a string here
+    return margin.toLowerCase();
+  }
+}
+
+type User = {
+  id: number;
+  username: string;
+};
+
+// Below is an example of a variable returning either a defined type, or a string as a union type.
+function createUser() {
+  const randomChance = Math.random() >= 0.5;
+
+  if (randomChance) {
+    return { id: 1, username: "nikko" };
+  } else {
+    return "Could not create a user.";
+  }
+}
+
+let userData: User | string = createUser();
+```
+
+#### Union Types with Arrays
+
+Create a union that supports multiple types for an array’s values, wrap the union in parentheses (string | number), then use array notation [].
+
+```typescript
+const dateNumber = new Date().getTime(); // returns a number
+const dateString = new Date().toString(); // returns a string
+
+const timesList: (string | number)[] = [dateNumber, dateString];
+
+// Advanced usage:
+
+function formatListings(listings: (string | number)[]) {
+  return listings.map((listing) => {
+    if (typeof listing === "string") {
+      return listing.toUpperCase();
+    }
+
+    if (typeof listing === "number") {
+      return `$${listing.toLocaleString()}`;
+    }
+  });
+}
+
+const result = formatListings([
+  "123 Main St",
+  226800,
+  "580 Broadway Apt 4a",
+  337900,
+]);
+
+console.log(result);
+```
+
+#### Common Key Value Pairs
+
+```typescript
+type Goose = {
+  isPettable: boolean;
+  hasFeathers: boolean;
+  canThwartAPicnic: boolean;
+};
+
+type Moose = {
+  isPettable: boolean;
+  hasHoofs: boolean;
+};
+
+const pettingZooAnimal: Goose | Moose = { isPettable: true };
+
+console.log(pettingZooAnimal.isPettable); // No TypeScript error
+console.log(pettingZooAnimal.hasHoofs); // TypeScript error
+
+// Combining Union Types and checking their validity. (Try removing displayName from Share type)
+type Like = {
+  username: string;
+  displayName: string;
+};
+
+type Share = {
+  username: string;
+  displayName: string;
+};
+
+function getFriendNameFromEvent(event: Like | Share) {
+  return event.displayName || event.username;
+}
+
+const newEvent = {
+  username: "vkrauss",
+  displayName: "Veronica Krauss",
+};
+
+const friendName = getFriendNameFromEvent(newEvent);
+
+console.log(`You have an update from ${friendName}.`);
+```
+
+### Unions with Literal Types
+
+```typescript
+type Status = "idle" | "downloading" | "complete";
+
+const downloadStatus = (status: Status) => {
+  if (status === "idle") {
+    console.log("Download");
+  }
+  if (status === "downloading") {
+    console.log("Downloading...");
+  }
+  if (status === "complete") {
+    console.log("Your download is complete!");
+  }
+};
+
+downloadStatus("downloading");
+```
+
+### Type Narrowing
+
+```typescript
+type Tennis = {
+  serve: () => void;
+};
+
+type Soccer = {
+  kick: () => void;
+};
+
+function play(sport: Tennis | Soccer) {
+  if ("serve" in sport) {
+    return sport.serve();
+  }
+
+  if ("kick" in sport) {
+    return sport.kick();
+  }
+}
+
+// Advanced Example:
+
+type Cat = {
+  name: string;
+  run: () => string;
+};
+
+type Fish = {
+  name: string;
+  swim: () => string;
+};
+
+const siameseCat = {
+  name: "Proxie",
+  run: () => "pitter pat",
+};
+
+const bettaFish = {
+  name: "Neptune",
+  swim: () => "bubble blub",
+};
+
+function move(pet: Cat | Fish) {
+  if ("run" in pet) {
+    return pet.run();
+  }
+  if ("swim" in pet) {
+    return pet.swim();
+  }
+}
+
+console.log(move(siameseCat));
 ```

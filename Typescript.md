@@ -362,3 +362,167 @@ function move(pet: Cat | Fish) {
 
 console.log(move(siameseCat));
 ```
+
+### Combining Narrowing with else
+
+```typescript
+type Pasta = {
+  menuName: string;
+  boil: () => string;
+};
+
+type Meat = {
+  menuName: string;
+  panFry: () => string;
+};
+
+const fettuccine = {
+  menuName: "Fettuccine",
+  boil: () => "Heat water to 212 degrees",
+};
+
+const steak = {
+  menuName: "New York Strip Steak",
+  panFry: () => "Heat oil to 350 degrees",
+};
+
+function prepareEntree(entree: Pasta | Meat) {
+  if ("boil" in entree) {
+    return entree.boil();
+  } else {
+    return entree.panFry();
+  }
+}
+
+console.log(prepareEntree(fettuccine));
+```
+
+### Interfaces and Classes
+
+```typescript
+// Write an interface here
+interface Directory {
+  addFile: (name: string) => void;
+}
+
+class DesktopDirectory implements Directory {
+  addFile(name: string) {
+    console.log(`Adding file: ${name}`);
+  }
+
+  showPreview(name: string) {
+    console.log(`Opening preview of file: ${name}`);
+  }
+}
+
+const Desktop = new DesktopDirectory();
+
+Desktop.addFile("lesson-notes.txt");
+Desktop.showPreview("lesson-notes.txt");
+```
+
+### Deeper Types
+
+```typescript
+interface Directory {
+  addFile: (name: string) => void;
+  // Define a config type member here
+  config: {
+    default: {
+      encoding: string;
+      permissions: string;
+    };
+  };
+}
+
+class DesktopDirectory implements Directory {
+  config = {
+    default: {
+      encoding: "utf-8",
+      permissions: "drw-rw-rw-",
+    },
+  };
+
+  addFile(name: string) {
+    console.log(`Adding file: ${name}`);
+  }
+
+  showPreview(name: string) {
+    console.log(`Opening preview of file: ${name}`);
+  }
+}
+
+const Desktop = new DesktopDirectory();
+
+console.log(Desktop.config);
+```
+
+### Extending Interfaces
+
+```typescript
+interface Developer extends Human {
+  code: () => void;
+}
+
+// Add your interface here
+interface Human {
+  name: string;
+  hobbies: string[];
+}
+
+const me: Developer | Human = {
+  code: () => console.log("Headphones on. Coffee brewed. Editor open."),
+  name: "Corrina",
+  hobbies: ["Building rockets"],
+};
+
+me.code();
+```
+
+### Index Signatures
+
+```typescript
+import { getBudgetAsync } from "./api";
+
+// Write an interface here
+interface Budget {
+  [category: string]: number;
+}
+
+async function getBudget() {
+  const result: Budget = await getBudgetAsync();
+  console.log(result);
+}
+
+getBudget();
+```
+
+### Optional Type Members
+
+```typescript
+// Write an interface here
+interface UserNameOptions {
+  firstName?: string;
+  lastName?: string;
+  username: string;
+}
+
+function getUserName(options: UserNameOptions) {
+  if (options.firstName && options.lastName) {
+    return console.log(`${options.firstName} ${options.lastName}`);
+  }
+
+  return console.log(options.username);
+}
+
+getUserName({
+  firstName: "Mr.",
+  lastName: "Oshiro",
+  username: "hotelowner304",
+});
+
+getUserName({
+  firstName: "Madeline",
+  username: "mountainClimber",
+});
+```
